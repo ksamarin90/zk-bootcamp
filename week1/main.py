@@ -134,8 +134,7 @@ B = GF([15, 29])
 (a, b) = np.linalg.solve(A, B)
 print(f"a: {a}, b: {b}")
 
-def f(x):
-    return a * GF(x) + b
+f = galois.Poly([a, b], GF)
 
 print(f"f(10): {f(10)}")
 print(f"f(23): {f(23)}")
@@ -150,3 +149,10 @@ print('')
 # What is Lagrange interpolation and what does it do?
 # Find a polynomial that crosses through the points (0, 1), (1, 2), (2, 1).
 # Use this Stackoverflow answer as a starting point: https://stackoverflow.com/a/73434775
+
+polynomial = galois.lagrange_poly(GF([0, 1, 2]), GF([1, 2, 1]))
+
+print(polynomial)
+print(polynomial(0))
+print(polynomial(1))
+print(polynomial(2))
