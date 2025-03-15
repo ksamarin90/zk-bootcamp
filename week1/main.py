@@ -86,6 +86,9 @@ print('')
 for x in range(p - 1):
     if mod(x * x) == 12:
         print(f'x * x = 12, for x = {x}')
+        # (15 + x) mod 71 = 0
+        # x = 56 => 71 % 71 = 0
+        # p - a = a_inverse
         break
 
 
@@ -129,12 +132,23 @@ print('')
 # Verify your answer by checking that f(10) = 15 and f(23) = 29.
 
 # Define the system of equations: 15 = 10a + b, 29 = 23a + b in GF(71)
+# {
+#    15 = 10a + b
+#     29 = 23a + b 
+# }
 A = GF([[10, 1], [23, 1]])
 B = GF([15, 29])
 (a, b) = np.linalg.solve(A, B)
 print(f"a: {a}, b: {b}")
 
 f = galois.Poly([a, b], GF)
+
+# # (p - 1)(p - 1) = p^2 - 2p + 1
+# mod 5 => 4 * 4
+# mod 7 => 6 * 6
+# mod 11 => 10 * 10
+# # 4 + 4 + 4 + 4
+# # 3 + 3
 
 print(f"f(10): {f(10)}")
 print(f"f(23): {f(23)}")
