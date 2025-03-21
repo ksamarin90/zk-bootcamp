@@ -55,7 +55,7 @@ Thus this is abelian group.
 1. Operator is closed (0.3333..33 can be expressed as 1/3 => rational number)
 2. Operator is NOT associative: a / (b / c) != (a / b) / c since: ac / b != a / bc
 3. There is NO identity element (1 / a != a / 1, one might think that 1 could be an identity)
-4. All elements have an inverse (a / b => b / a)
+4. All elements have an inverse (a / b => b / a) WRONG
 
 Thus this is a magma.
 
