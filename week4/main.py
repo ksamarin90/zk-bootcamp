@@ -3,10 +3,8 @@ from ecpy.keys import ECPublicKey, ECPrivateKey
 from sha3 import keccak_256
 import secrets
 
-# generated via ethers.Wallet.createRandom()
-private_key = 0x66417992200062b8d493d5258506b2216975f7d2420b16c15bb6cadd4d8f7dc5
-
 curve = Curve.get_curve('secp256k1')
+private_key = secrets.randbelow(curve.order - 1) + 1
 
 # we use generator (point) of secp256k1 curve and multiply it by private key (scalar) to get a public key point
 public_key_point = private_key * curve.generator
