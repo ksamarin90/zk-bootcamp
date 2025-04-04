@@ -1,10 +1,11 @@
 from ecpy.curves import Curve
-from ecpy.keys import ECPublicKey, ECPrivateKey
 from sha3 import keccak_256
 import secrets
 
 curve = Curve.get_curve('secp256k1')
 private_key = secrets.randbelow(curve.order - 1) + 1
+
+print("Private key: " + str(private_key))
 
 # we use generator (point) of secp256k1 curve and multiply it by private key (scalar) to get a public key point
 public_key_point = private_key * curve.generator
@@ -40,12 +41,12 @@ R = k * curve.generator
 # from which we only take x value
 r = R.x
 
-print(r)
+print("r: " + str(r))
 
 # we compute s
 s = (h + r * private_key) * pow(k, -1, curve.order) % curve.order
 
-print(s)
+print("s: " + str(s))
 
 # and send to verifier (public_key, r, s, h)
 
