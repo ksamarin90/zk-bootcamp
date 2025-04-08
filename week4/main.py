@@ -1,4 +1,4 @@
-from ecpy.curves import Curve
+from ecpy.curves import Curve, Point
 from sha3 import keccak_256
 import secrets
 
@@ -55,3 +55,22 @@ R_check = (h * curve.generator + r * public_key_point) * pow(s, -1, curve.order)
 
 # and verifies that x value matches r
 assert(r == R_check.x)
+
+# try to recover public key having additional v value
+
+# create additional variable v to pass
+v = 27 if public_key_point.y % 2 == 0 else 28
+
+# send to verifier (r, s, v, h)
+y_value = curve.y_recover(r, 0 if v == 27 else 1)
+
+R_recovered = Point(r, y_value, curve)
+
+# now derive Public key
+P_derived = s * pow(r, -1, curve.order)* R_recovered - h* pow(r, -1, curve.order)* curve.generator
+
+# compute R from derived Public key
+R_check_derived = (h * curve.generator + r * P_derived) * pow(s, -1, curve.order)
+
+# and verifies that x value matches r in that case as well
+assert(r == R_check_derived.x)
