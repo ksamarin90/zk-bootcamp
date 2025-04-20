@@ -27,6 +27,15 @@ beta_2 = multiply(G2, beta)
 gamma_2 = multiply(G2, gamma)
 delta_2 = multiply(G2, delta)
 
+print(alpha_1)
+print("=====")
+print(beta_2)
+print("=====")
+print(gamma_2)
+print("=====")
+print(delta_2)
+print("=====")
+
 X_1= add(add(multiply(G1, x1), multiply(G1, x2)), multiply(G1, x3))
 
 A_1 = multiply(G1, a)
