@@ -60,3 +60,39 @@ assert (a_poly * b_poly) == (c_poly + h_poly * t_poly), "non equal polynomials"
 num = random.randint(5, 1000)
 # random number might not be evaluated correctly because we are using floating point math
 assert (a_poly(num) * b_poly(num)) == (c_poly(num) + h_poly(num) * t_poly(num))
+
+
+# Problem 2
+import galois
+
+order = 79
+
+GF = galois.GF(order)
+
+def L_gf(vec):
+    for i in range(len(vec)):
+        if (vec[i] < 0):
+            # we need to get a congruent number for negative one
+            vec[i] = order + vec[i]
+    return galois.lagrange_poly(GF([1, 2, 3]), GF(vec))
+
+def matrix_to_poly_gf(matrix):
+    columns = [matrix[:, i] for i in range(matrix.shape[1])]
+    result_poly = GF(0)
+    for i in range(len(columns)):
+        poly = L_gf(columns[i]) * GF(w[i] % order)
+        result_poly += poly
+    return result_poly
+
+a_poly_gf = matrix_to_poly_gf(A)
+b_poly_gf = matrix_to_poly_gf(B)
+c_poly_gf = matrix_to_poly_gf(C)
+
+t_poly_gf = galois.Poly([1, 78], field = GF) * galois.Poly([1, 77], field = GF) * galois.Poly([1, 76], field = GF)
+
+h_poly_gf = (a_poly_gf * b_poly_gf - c_poly_gf) // t_poly_gf
+
+num = GF(num % order)
+
+assert (a_poly_gf * b_poly_gf == c_poly_gf + h_poly_gf * t_poly_gf), "Non equal polynoms"
+assert (a_poly_gf(num) * b_poly_gf(num) == c_poly_gf(num) + h_poly_gf(num) * t_poly_gf(num)), "Non equal polynoms"
