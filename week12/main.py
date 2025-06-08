@@ -17,10 +17,9 @@ h_poly_gf = (a_poly_gf * b_poly_gf - c_poly_gf) // t_poly_gf
 A_G = add(evaluate_polynomial(a_poly_gf, srs_g1), alpha_g1)
 B_G = add(evaluate_polynomial(b_poly_gf, srs_g2), beta_g2)
 
-C_prime_G = evaluate_polynomial(c_poly_gf, srs_g1)
 HT_G = evaluate_polynomial(h_poly_gf, eta_g1)
 psi_sum = calculate_psi(witness, psi)
 
-C_G = add(psi_sum, add(C_prime_G, HT_G))
+C_G = add(psi_sum, HT_G)
 
-assert eq(FQ12.one(), final_exponentiate(pairing(B_G, neg(A_G)) * pairing(beta_g2, alpha_g1) * pairing(G2, C_G)))
+assert(eq(FQ12.one(), final_exponentiate(pairing(B_G, neg(A_G)) * pairing(beta_g2, alpha_g1) * pairing(G2, C_G))))
