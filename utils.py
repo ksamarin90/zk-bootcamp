@@ -29,24 +29,23 @@ def matrix_to_polynomial(matrix, witness):
     columns = [matrix[:, i] for i in range(matrix.shape[1])]
     result_poly = GF(0)
     for i in range(len(columns)):
-        poly = L_gf(columns[i]) * GF(int(witness[i]))
+        poly = L_gf(columns[i]) * GF(witness[i])
         result_poly += poly
     return result_poly
 
 def random_gf():
     return GF(random.randint(0, curve_order - 1))
 
-def create_srs(G, tau, degree):
-    return [multiply(G, int(tau) ** i) for i in range(degree, -1, -1)]
+def create_srs(G, tau, constraints):
+    return [multiply(G, int(tau) ** i) for i in range(constraints - 1, -1, -1)]
 
+def create_eta(G, tau, constraints, t):
+    return [multiply(G, (int(tau) ** i) * int(t(tau))) for i in range(constraints - 2, -1, -1)]
 
 # taking from ZK book inner_product to evaluate polynomial at G points
 # and modify it to be generic
 def evaluate_polynomial(polynomial, points):
     coeffs = []
-    degreeDif = len(points) - len(polynomial.coeffs)
-    for i in range(degreeDif):
-        coeffs.append(0)
     for i in range(len(polynomial.coeffs)):
         coeffs.append(int(polynomial.coeffs[i]))
     return reduce(add, map(multiply, points, coeffs))
