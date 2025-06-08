@@ -1,6 +1,7 @@
+from operator import mul
 import numpy as np
 import galois
-from py_ecc.bn128 import G1, G2, multiply, add, pairing, FQ12, curve_order
+from py_ecc.bn128 import G1, Z1, G2, multiply, add, pairing, FQ12, curve_order
 from functools import reduce
 import random
 
@@ -41,6 +42,25 @@ def create_srs(G, tau, constraints):
 
 def create_eta(G, tau, constraints, t):
     return [multiply(G, (int(tau) ** i) * int(t(tau))) for i in range(constraints - 2, -1, -1)]
+
+def create_psi(U, V, W, alpha, beta, tau): 
+    u_columns = [U[:, i] for i in range(U.shape[1])]
+    v_columns = [V[:, i] for i in range(V.shape[1])]
+    w_columns = [W[:, i] for i in range(W.shape[1])]
+    psi = []
+    for i in range(len(u_columns)):
+        u_poly = L_gf(u_columns[i])
+        v_poly = L_gf(v_columns[i])
+        w_poly = L_gf(w_columns[i])
+        value = w_poly(tau) + alpha * v_poly(tau) + beta * u_poly(tau)
+        psi.append(multiply(G1, int(value)))
+    return psi
+
+def calculate_psi(witness, psi):
+    result = Z1
+    for i in range(len(witness)):
+        result = add(result, multiply(psi[i], int(witness[i])))
+    return result
 
 # taking from ZK book inner_product to evaluate polynomial at G points
 # and modify it to be generic
