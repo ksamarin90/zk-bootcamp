@@ -43,6 +43,31 @@ def create_srs(G, tau, constraints):
 def create_eta(G, tau, constraints, t):
     return [multiply(G, (int(tau) ** i) * int(t(tau))) for i in range(constraints - 2, -1, -1)]
 
+def multiplicative_inverse(value):
+    return pow(int(value), curve_order - 2, curve_order)
+
+def divide_eta_by_delta(eta, delta):
+    result = []
+    for i in range(len(eta)):
+        result.append(multiply(eta[i], int(multiplicative_inverse(delta))))
+    return result
+
+def get_public_psi(psi, gamma, endIndex):
+    public_psi = []
+
+    for i in range(endIndex + 1):
+        public_psi.append(multiply(psi[i], int(multiplicative_inverse(gamma))))
+    
+    return public_psi
+
+def get_private_psi(psi, delta, startIndex):
+    private_psi = []
+
+    for i in range(startIndex, len(psi)):
+        private_psi.append(multiply(psi[i], int(multiplicative_inverse(delta))))
+    
+    return private_psi
+
 def create_psi(U, V, W, alpha, beta, tau): 
     u_columns = [U[:, i] for i in range(U.shape[1])]
     v_columns = [V[:, i] for i in range(V.shape[1])]
@@ -60,6 +85,12 @@ def calculate_psi(witness, psi):
     result = Z1
     for i in range(len(witness)):
         result = add(result, multiply(psi[i], int(witness[i])))
+    return result
+
+def calculate_psi_with_offset(witness, psi, witnessOffset):
+    result = Z1
+    for i in range(len(psi)):
+        result = add(result, multiply(psi[i], int(witness[i + witnessOffset])))
     return result
 
 # taking from ZK book inner_product to evaluate polynomial at G points
